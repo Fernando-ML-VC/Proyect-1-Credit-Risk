@@ -47,3 +47,17 @@ Se selecciona **[Insertar Nombre del Modelo Final, ej: XGBoost]** como el algori
 1. Ofrece el **F1-Score (0.XX)** más consistente del benchmark, garantizando la detección efectiva del riesgo de impago.
 2. Mantiene una **Precision de [XX]%**, asegurando un flujo de aprobación de créditos saludable sin descartar clientes solventes de forma desmedida.
 3. Presenta una latencia de predicción eficiente (**[X.XX]s**) apta para integrarse con sistemas de *credit scoring* automatizados.
+
+---
+
+## ☁️ Estrategia de Selección: SVC y Escalabilidad en la Nube
+
+Si bien en entornos con restricciones estrictas de cómputo local los tiempos de entrenamiento de algoritmos geométricos pueden considerarse un factor limitante, en este proyecto se evalúa el **Support Vector Classifier (SVC)** como el **modelo con mejor desempeño predictivo global**.
+
+### Justificación Técnica y de Negocio para SVC:
+1. **Líder en Métricas Clave:** El modelo SVC alcanzó el **F1-Score más alto ($0.7671$)**, con un excelente balance entre una **Precision del $93.07\%$** y un **Recall del $65.25\%$** sobre el dataset de prueba (Test)[cite: 1, 2].
+2. **Eficiencia por Fit Individual:** Aunque la búsqueda global por grilla (GridSearchCV) sumó un tiempo total elevado, en términos individuales el SVC requirió únicamente **95 fits**, mostrándose altamente optimizado en comparación con la convergencia de ensembles como Random Forest (2,400 fits)[cite: 2].
+3. **Factibilidad Operativa en la Nube:** Desde la perspectiva de arquitectura de software, una entidad financiera cuenta con la capacidad de delegar el reentrenamiento a servicios de cómputo elástico en la nube (ej. AWS EC2, GCP Compute Engine). 
+
+> **Conclusión del Trade-off:**  
+> El costo marginal de alquilar recursos de cómputo en la nube para entrenar o ejecutar inferencias con SVC es ampliamente absorbido por las ganancias financieras de evitar la cartera morosa (vía su alto Recall) sin descartar a clientes solventes (gracias a su Precision del $93\%$)[cite: 1, 2]. La elección definitiva entre SVC o alternativas más livianas como Regresión Logística queda a discreción de la infraestructura y el presupuesto operativo del negocio.
