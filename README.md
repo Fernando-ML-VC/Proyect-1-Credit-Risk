@@ -1,7 +1,7 @@
 # 💳 Proyecto 1: Evaluación y Predicción de Riesgo Crediticio
 
-## 📄 Resumen Ejecutivo
-Este proyecto desarrolla y evalúa modelos de Machine Learning para predecir la probabilidad de *default* (incumplimiento) en solicitudes de crédito. Se estructuró un flujo de trabajo iterativo que abarca desde la preparación de datos y manejo de desbalanceo, hasta la comparación rigurosa de algoritmos bajo criterios de desempeño predictivo, eficiencia computacional e impacto de negocio.
+## 📄 Resumen
+Este proyecto desarrolla y evalúa modelos de Machine Learning para predecir la probabilidad de *default* (incumplimiento) en solicitudes de crédito. Se estructuró un flujo de trabajo que abarca desde la preparación de datos y manejo de desbalanceo, hasta la comparación rigurosa de algoritmos bajo criterios de desempeño predictivo, eficiencia computacional e impacto de negocio.
 
 ---
 
@@ -9,13 +9,13 @@ Este proyecto desarrolla y evalúa modelos de Machine Learning para predecir la 
 
 Para garantizar la simulación exacta de un entorno de producción, la medición de tiempos de inferencia (*Inference Time*) se realizó de forma estandarizada sobre el dataset de **Test** (datos totalmente no vistos).
 
-| Modelo | Configuración / Dataset | Accuracy | Precision (Clase 1) | Recall (Clase 1) | F1-Score | Fit Time (s) | Inference Time Test (s) |
+| Modelo | Configuración / Dataset | Accuracy | Precision | Recall | F1-Score | Fit Time (s) | Inference Time Test (s) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Logistic Regression** | Baseline (PCA 95%) | 84.35% | 75.79% | 47.04% | 0.5805 | 0.22s | 0.066s |
-| **SVC** | RBF Kernel + PCA (GridSearch) | *[Métrica]* | *[Métrica]* | *[Métrica]* | *[Métrica]* | 1050.93s | *[Métrica]* |
-| **Random Forest** | Standalone (Sin class_weight) | 83.70% | 80.12% | 39.10% | 0.5260 | *[Métrica]* | *[Métrica]* |
+| **Logistic Regression** | (PCA 95%) | 84.35% | 75.79% | 47.04% | 58.05% | 0.33s | 0.025s |
+| **SVC** | RBF Kernel + PCA (GridSearch) | 90.88% | 93.07% | 65.25% | 76.71% | 654.30s | 1.465s |
+| **Random Forest** | (GridSearch, Sin class_weight) | 83.79% | 80.18% | 39.30% | 0.5274 | 716.57s | 0.048s |
 | **Random Forest** | Class Weight Balanced | -- | 41.80% | 68.50% | 0.5195 | *[Métrica]* | *[Métrica]* |
-| **XGBoost (Tuned)** | Modelo Final (Gradient Boosting) | *[Métrica]* | *[Métrica]* | *[Métrica]* | *[Métrica]* | *[Métrica]* | *[Métrica]* |
+| **XGBoost** | (GridSearch, Gradient Boosting) | 83.76% | 80.12% | 39.15% | 52.59% | 776.81s | 0.017s |
 
 ---
 
@@ -35,7 +35,7 @@ En el dominio financiero, la elección de la métrica óptima responde a una bal
 
 ### 3. Eficiencia y Factibilidad de Despliegue (Latencia)
 - **Costo de Entrenamiento:** Modelos basados en Support Vector Machines (**SVC**) requirieron un tiempo de entrenamiento elevado (>1050 segundos) impulsado por la búsqueda de hiperparámetros, complicando ciclos de reentrenamiento frecuente.
-- **Latencia de Respuesta:** La Regresión Logística y los árboles ensemble optimizados mostraron tiempos de inferencia en orden de milisegundos sobre el set de prueba, posicionándose como los candidatos viables para APIs de decisión en tiempo real.
+- **Latencia de Respuesta:** La Regresión Logística y los árboles ensemble optimizados mostraron tiempos de inferencia en orden de milisegundos sobre el set de prueba.
 
 ---
 
@@ -56,8 +56,7 @@ Si bien en entornos con restricciones estrictas de cómputo local los tiempos de
 
 ### Justificación Técnica y de Negocio para SVC:
 1. **Líder en Métricas Clave:** El modelo SVC alcanzó el **F1-Score más alto ($0.7671$)**, con un excelente balance entre una **Precision del $93.07\%$** y un **Recall del $65.25\%$** sobre el dataset de prueba (Test)[cite: 1, 2].
-2. **Eficiencia por Fit Individual:** Aunque la búsqueda global por grilla (GridSearchCV) sumó un tiempo total elevado, en términos individuales el SVC requirió únicamente **95 fits**, mostrándose altamente optimizado en comparación con la convergencia de ensembles como Random Forest (2,400 fits)[cite: 2].
-3. **Factibilidad Operativa en la Nube:** Desde la perspectiva de arquitectura de software, una entidad financiera cuenta con la capacidad de delegar el reentrenamiento a servicios de cómputo elástico en la nube (ej. AWS EC2, GCP Compute Engine). 
+2. **Factibilidad Operativa en la Nube:** Desde la perspectiva de arquitectura de software, una entidad financiera cuenta con la capacidad de delegar el reentrenamiento y predicciones a servicios de cómputo elástico en la nube (ej. AWS EC2). 
 
 > **Conclusión del Trade-off:**  
 > El costo marginal de alquilar recursos de cómputo en la nube para entrenar o ejecutar inferencias con SVC es ampliamente absorbido por las ganancias financieras de evitar la cartera morosa (vía su alto Recall) sin descartar a clientes solventes (gracias a su Precision del $93\%$)[cite: 1, 2]. La elección definitiva entre SVC o alternativas más livianas como Regresión Logística queda a discreción de la infraestructura y el presupuesto operativo del negocio.
