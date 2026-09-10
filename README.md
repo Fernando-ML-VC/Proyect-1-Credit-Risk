@@ -14,7 +14,7 @@ Para garantizar la simulación exacta de un entorno de producción, la medición
 | **Logistic Regression** | (PCA 95%) | 84.35% | 75.79% | 47.04% | 58.05% | 0.33s | 0.025s |
 | **SVC** | RBF Kernel + PCA (GridSearch) | 90.88% | 93.07% | 65.25% | 76.71% | 654.30s | 1.465s |
 | **Random Forest** | (GridSearch, Sin class_weight) | 83.79% | 80.18% | 39.30% | 0.5274 | 716.57s | 0.048s |
-| **Random Forest** | Class Weight Balanced | -- | 41.80% | 68.50% | 0.5195 | *[Métrica]* | *[Métrica]* |
+| **Random Forest** | Class Weight Balanced | 70.81% | 41.81% | 68.58% | 51.95% | 1146.89s | 0.085s |
 | **XGBoost** | (GridSearch, Gradient Boosting) | 83.76% | 80.12% | 39.15% | 52.59% | 776.81s | 0.017s |
 
 ---
@@ -30,7 +30,7 @@ La elección de la métrica a optimizar responde a una estrategia de negocio:
 - **Costo de Oportunidad (Falsos Positivos):** Rechazar a un buen pagador implica perder la ganancia de cobro de intereses y ceder mercado a la competencia.
 
 > **Caso de Estudio en Random Forest:**  
-> Al incorporar `class_weight='balanced'`, se logró maximizar la captura de impagos elevanado el **Recall al 68.5%**. Sin embargo, esto provocó una severa degradación en la **Precision (41.8%)**, lo que significaba que casi 6 de cada 10 clientes rechazados eran en realidad solventes.
+> Al incorporar `class_weight='balanced'`, se logró maximizar la captura de impagos elevanado el **Recall al 68.58%**. Sin embargo, esto provocó una severa degradación en la **Precision (41.81%)**, lo que significaba que casi 6 de cada 10 clientes rechazados eran en realidad solventes.
 
 ### 3. Eficiencia y Factibilidad de Despliegue (Latencia)
 - **Costo de Entrenamiento:** Modelos basados en Support Vector Machines (**SVC**) requirieron un tiempo de entrenamiento elevado (654.30 segundos) impulsado por la búsqueda de hiperparámetros.
