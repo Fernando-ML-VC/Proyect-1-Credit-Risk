@@ -54,7 +54,7 @@ Se selecciona **Support Vector Machines** como el algoritmo para despliegue en p
 
 Si bien en entornos con restricciones estrictas de cómputo (en local), los tiempos de entrenamiento de los algoritmos pueden considerarse un factor limitante.
 
-**Factibilidad Operativa en la Nube:** Una entidad financiera cuenta con la capacidad de delegar el reentrenamiento e inferencia a servicios de cómputo elástico en la nube (ej. AWS EC2). 
+**Factibilidad Operativa en la Nube:** Una entidad financiera cuenta con la capacidad de delegar el entrenamiento e inferencia a servicios de cómputo elástico en la nube (ej. AWS EC2). 
 
 **Conclusión:**  
-El costo marginal de alquilar recursos computacionales en la nube para entrenar o ejecutar inferencias con SVC, es ampliamente absorbido por las ganancias al evitar los créditos a personas morosas (vía su alto Recall) sin descartar a clientes solventes (gracias a su Precision). La elección definitiva entre SVC o alternativas más livianas como Regresión Logística queda a discreción de la infraestructura y el presupuesto operativo del negocio.
+El costo marginal de alquilar recursos computacionales en la nube, es ampliamente absorbido por las ganancias al evitar los créditos a personas morosas (vía su alto Recall) sin descartar a clientes solventes (gracias a su Precision). La elección definitiva entre SVC o alternativas más livianas como Regresión Logística queda a discreción de la infraestructura y el presupuesto operativo del negocio.
