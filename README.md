@@ -22,41 +22,39 @@ Para garantizar la simulación exacta de un entorno de producción, la medición
 ## 📈 Análisis Diagnóstico y Justificación Técnica
 
 ### 1. Generalización y Comportamiento del Aprendizaje
-- **Regresión Logística (Baseline):** Demostró una capacidad de generalización excelente. El F1-Score se mantuvo estable entre validación (0.5800) y testeo (0.5805), confirmando ausencia de *overfitting*.
-- **Modelos Complejos:** Si bien algoritmos no lineales capturan patrones más complejos, requieren un control estricto de hiperparámetros para evitar la memorización del conjunto de entrenamiento.
+- **Support Vector Machines:** Demostró una capacidad de generalización excelente. El F1-Score se mantuvo estable entre validación (0.7824) y testeo (0.7671), confirmando ausencia de *overfitting*.
 
 ### 2. Compromiso de Negocio (Precision vs. Recall)
-En el dominio financiero, la elección de la métrica óptima responde a una balanza de costos:
+La elección de la métrica a optimizar responde a una estrategia de negocio:
 - **Pérdida Directa (Falsos Negativos):** Aprobar un crédito a un cliente moroso representa la pérdida total del capital.
 - **Costo de Oportunidad (Falsos Positivos):** Rechazar a un buen pagador implica perder la ganancia de cobro de intereses y ceder mercado a la competencia.
 
 > **Caso de Estudio en Random Forest:**  
-> Al incorporar `class_weight='balanced'`, se logró maximizar la captura de impagos elevanado el **Recall al 68.5%**. Sin embargo, esto provocó una severa degradación en la **Precision (41.8%)**, lo que significaba que casi 6 de cada 10 clientes rechazados eran en realidad solventes. Debido a este alto costo de oportunidad, se optó por priorizar modelos que sostengan un F1-Score equilibrado.
+> Al incorporar `class_weight='balanced'`, se logró maximizar la captura de impagos elevanado el **Recall al 68.5%**. Sin embargo, esto provocó una severa degradación en la **Precision (41.8%)**, lo que significaba que casi 6 de cada 10 clientes rechazados eran en realidad solventes.
 
 ### 3. Eficiencia y Factibilidad de Despliegue (Latencia)
-- **Costo de Entrenamiento:** Modelos basados en Support Vector Machines (**SVC**) requirieron un tiempo de entrenamiento elevado (>1050 segundos) impulsado por la búsqueda de hiperparámetros, complicando ciclos de reentrenamiento frecuente.
+- **Costo de Entrenamiento:** Modelos basados en Support Vector Machines (**SVC**) requirieron un tiempo de entrenamiento elevado (654.30 segundos) impulsado por la búsqueda de hiperparámetros.
 - **Latencia de Respuesta:** La Regresión Logística y los árboles ensemble optimizados mostraron tiempos de inferencia en orden de milisegundos sobre el set de prueba.
 
 ---
 
 ## 🎯 Conclusión y Modelo Final Seleccionado
 
-Se selecciona **[Insertar Nombre del Modelo Final, ej: XGBoost]** como el algoritmo para despliegue en producción. 
+Se selecciona **Support Vector Machines** como el algoritmo para despliegue en producción. 
 
 **Justificación:**
-1. Ofrece el **F1-Score (0.XX)** más consistente del benchmark, garantizando la detección efectiva del riesgo de impago.
-2. Mantiene una **Precision de [XX]%**, asegurando un flujo de aprobación de créditos saludable sin descartar clientes solventes de forma desmedida.
-3. Presenta una latencia de predicción eficiente (**[X.XX]s**) apta para integrarse con sistemas de *credit scoring* automatizados.
-
+1. Ofrece el **F1-Score (0.7671)** más consistente del benchmark, detección efectiva del riesgo de impago.
+2. Mantiene una **Precision de (0.9307)**, asegurando un flujo de aprobación de créditos saludable sin descartar clientes solventes de forma desmedida.
+3. Presenta una latencia de predicción de **1.46s**, esto es sobre el total de 2864 ejemplos, por cada ejemplos el tiempo es de **0.0005097s**
 ---
 
 ## ☁️ Estrategia de Selección: SVC y Escalabilidad en la Nube
 
-Si bien en entornos con restricciones estrictas de cómputo local los tiempos de entrenamiento de algoritmos geométricos pueden considerarse un factor limitante, en este proyecto se evalúa el **Support Vector Classifier (SVC)** como el **modelo con mejor desempeño predictivo global**.
+Si bien en entornos con restricciones estrictas de cómputo local los tiempos de entrenamiento de algoritmos pueden considerarse un factor limitante, en este proyecto se evalúa el **Support Vector Classifier (SVC)** como el **modelo con mejor desempeño predictivo global**.
 
 ### Justificación Técnica y de Negocio para SVC:
-1. **Líder en Métricas Clave:** El modelo SVC alcanzó el **F1-Score más alto ($0.7671$)**, con un excelente balance entre una **Precision del $93.07\%$** y un **Recall del $65.25\%$** sobre el dataset de prueba (Test)[cite: 1, 2].
-2. **Factibilidad Operativa en la Nube:** Desde la perspectiva de arquitectura de software, una entidad financiera cuenta con la capacidad de delegar el reentrenamiento y predicciones a servicios de cómputo elástico en la nube (ej. AWS EC2). 
+1. **Líder en Métricas Clave:** El modelo SVC alcanzó el **F1-Score más alto 0.7671**, con un excelente balance entre una **Precision del 0.9307** y un **Recall del 0.6525** sobre el dataset de prueba (Test).
+2. **Factibilidad Operativa en la Nube:** Una entidad financiera cuenta con la capacidad de delegar el reentrenamiento e inferencia a servicios de cómputo elástico en la nube (ej. AWS EC2). 
 
-> **Conclusión del Trade-off:**  
-> El costo marginal de alquilar recursos de cómputo en la nube para entrenar o ejecutar inferencias con SVC es ampliamente absorbido por las ganancias financieras de evitar la cartera morosa (vía su alto Recall) sin descartar a clientes solventes (gracias a su Precision del $93\%$)[cite: 1, 2]. La elección definitiva entre SVC o alternativas más livianas como Regresión Logística queda a discreción de la infraestructura y el presupuesto operativo del negocio.
+> **Conclusión:**  
+> El costo marginal de alquilar recursos de cómputo en la nube para entrenar o ejecutar inferencias con SVC es ampliamente absorbido por las ganancias financieras de evitar la créditos a personas morosas (vía su alto Recall) sin descartar a clientes solventes (gracias a su Precision). La elección definitiva entre SVC o alternativas más livianas como Regresión Logística queda a discreción de la infraestructura y el presupuesto operativo del negocio.
